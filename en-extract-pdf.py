@@ -5,12 +5,23 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import pandas as pd
 from selenium.webdriver.chrome.options import Options
+from datetime import datetime
+import os
+import sys
+
+application_path = os.path.dirname(sys.executable)
+
+now = datetime.now()
+# MMDDYYYY
+month_day_year = now.strftime("%m%d%Y")
+
 
 website = "https://www.thesun.co.uk/sport/football/"
 path = "C:/Users/vipul/Downloads/chromedriver-win64/chromedriver.exe"
 
 # Chrome options to ignore SSL errors
 chrome_options = Options()
+chrome_options.headless = True
 chrome_options.add_argument('--ignore-certificate-errors')
 chrome_options.add_argument('--ignore-ssl-errors')
 
@@ -47,6 +58,10 @@ for container in containers:
 # Exporting data to a CSV file
 my_dict = {'title': titles, 'subtitle': subtitles, 'link': links}
 df_headlines = pd.DataFrame(my_dict)
-df_headlines.to_csv('headline.csv')
+file_name = f'headline-{month_day_year}.csv'
+
+final_path = os.path.join(application_path, file_name)
+
+df_headlines.to_csv(final_path)
 
 driver.quit()
